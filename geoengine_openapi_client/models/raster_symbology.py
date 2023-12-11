@@ -21,15 +21,15 @@ import json
 
 from typing import Union
 from pydantic import BaseModel, Field, StrictFloat, StrictInt
-from geoengine_openapi_client.models.colorizer import Colorizer
+from geoengine_openapi_client.models.raster_colorizer import RasterColorizer
 
 class RasterSymbology(BaseModel):
     """
     RasterSymbology
     """
-    colorizer: Colorizer = Field(...)
     opacity: Union[StrictFloat, StrictInt] = Field(...)
-    __properties = ["colorizer", "opacity"]
+    raster_colorizer: RasterColorizer = Field(..., alias="rasterColorizer")
+    __properties = ["opacity", "rasterColorizer"]
 
     class Config:
         """Pydantic configuration"""
@@ -55,9 +55,9 @@ class RasterSymbology(BaseModel):
                           exclude={
                           },
                           exclude_none=True)
-        # override the default output from pydantic by calling `to_dict()` of colorizer
-        if self.colorizer:
-            _dict['colorizer'] = self.colorizer.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of raster_colorizer
+        if self.raster_colorizer:
+            _dict['rasterColorizer'] = self.raster_colorizer.to_dict()
         return _dict
 
     @classmethod
@@ -70,8 +70,8 @@ class RasterSymbology(BaseModel):
             return RasterSymbology.parse_obj(obj)
 
         _obj = RasterSymbology.parse_obj({
-            "colorizer": Colorizer.from_dict(obj.get("colorizer")) if obj.get("colorizer") is not None else None,
-            "opacity": obj.get("opacity")
+            "opacity": obj.get("opacity"),
+            "raster_colorizer": RasterColorizer.from_dict(obj.get("rasterColorizer")) if obj.get("rasterColorizer") is not None else None
         })
         return _obj
 
